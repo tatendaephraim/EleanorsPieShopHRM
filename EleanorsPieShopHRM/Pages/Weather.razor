@@ -1,0 +1,129 @@
+﻿@page "/weather"
+@inject HttpClient Http
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates fetching data from the server.</p>
+
+@if (forecasts == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<p>This component demonstrates another example of  fetching data from the server.</p>
+
+@if (userDatas == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>UserId</th>
+                <th>Email</th>
+                <th>Name</th>
+                <th>Given Name</th>
+                <th>Family Name</th>
+                <th>Nick Name</th>
+                <th>Last IP</th>
+                <th>Logins Count</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th>Last Login</th>
+                <th>Email Verified</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var userData in userDatas)
+            {
+                <tr>
+                    <td>@userData.User_Id</td>
+                    <td>@userData.Email</td>
+                    <td>@userData.Name</td>
+                    <td>@userData.Given_Name</td>
+                    <td>@userData.Family_Name</td>
+                    <td>@userData.Nickname</td>
+                    <td>@userData.LastIp</td>
+                    <td>@userData.Logins_Count</td>
+                    <td>@userData.Created_At.ToShortDateString()</td>
+                    <td>@userData.Updated_At.ToShortDateString()</td>
+                    <td>@userData.Last_Login.ToShortDateString()</td>
+                    <td>@userData.Email_Verified</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private WeatherForecast[]? forecasts;
+    private UserData[]? userDatas;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        forecasts = await Http.GetFromJsonAsync<WeatherForecast[]>("sample-data/weather.json");
+        userDatas = await Http.GetFromJsonAsync<UserData[]>("sample-data/sample_users_with_id.json");
+    }
+
+    public class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+
+        public int TemperatureC { get; set; }
+
+        public string? Summary { get; set; }
+
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+    public class UserData
+    {
+        public string? User_Id { get; set; }
+        public string? Email { get; set; }
+        public string? Name { get; set; } // Consider separating name into GivenName and FamilyName
+        public string? Given_Name { get; set; }
+        public string? Family_Name { get; set; }
+        public string? Nickname { get; set; }
+        public string? LastIp { get; set; }
+        public int Logins_Count { get; set; }
+        public DateTime Created_At { get; set; }
+        public DateTime Updated_At { get; set; }
+        public DateTime Last_Login { get; set; }
+        public bool Email_Verified   { get; set; }
+
+    }
+}
+<Counter/>
+<Counter/>
+<Counter />
+<Counter />
+<Counter />
+<Counter />
